@@ -42,12 +42,21 @@ fun SellScreen(
     val sellItems = remember { mutableStateListOf<SellItem>() }
     if ( sellItems.isEmpty())  sellItems.addAll(perSellItems)
     val c = database.productsQueries.countProducts()
-    if (c.executeAsOne() == 0L)
-        database.productsQueries.insert("123330",13.5,20.0,"بيض")
+    if (c.executeAsOne() < 2L)
+        database.productsQueries.insert("4534345",13.5,20.0,"حمص")
     val item = database.productsQueries.selectByBarcode("123330").executeAsList()
     if (item.isNotEmpty())
     {
-        //sellItems.add(SellItem(item[0]., item[0].name, item[0].price,
+        item.forEach {
+            sellItems.add(SellItem(
+                id = it.product_id.toInt(),
+                name = it.product_name.toString(),
+                price = it.retail_price,
+                quantity = it.product_id.toInt(),
+                total = it.retail_price,
+            ))
+        }
+
     }
 
     Box(modifier = modifier.fillMaxSize())
