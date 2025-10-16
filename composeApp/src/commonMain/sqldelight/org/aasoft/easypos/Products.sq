@@ -1,0 +1,49 @@
+CREATE TABLE IF NOT EXISTS products (
+    product_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    barcode TEXT UNIQUE NOT NULL,
+    wholesale_price REAL NOT NULL,
+    retail_price REAL NOT NULL,
+    product_name TEXT,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+insert:
+INSERT INTO products (barcode, wholesale_price, retail_price, product_name)
+VALUES (?, ?, ?, ?);
+
+selectById:
+SELECT * FROM products WHERE product_id = ?;
+
+selectByBarcode:
+SELECT * FROM products WHERE barcode = ?;
+
+deleteById:
+DELETE FROM products WHERE product_id = ?;
+
+deleteByBarcode:
+DELETE FROM products WHERE barcode = ?;
+
+updateWholesalePrice:
+UPDATE products SET wholesale_price = ? WHERE product_id = ?;
+
+updateRetailPrice:
+UPDATE products SET retail_price = ? WHERE product_id = ?;
+
+updateProductName:
+UPDATE products SET product_name = ? WHERE product_id = ?;
+
+updateBarcode:
+UPDATE products SET barcode = ? WHERE product_id = ?;
+
+updateProduct:
+UPDATE products SET barcode = ?, wholesale_price = ?, retail_price = ?, product_name = ? WHERE product_id = ?;
+
+countProducts:
+SELECT COUNT(*) FROM products;
+
+searchProducts:
+SELECT * FROM products WHERE product_name LIKE ?;
+
+getProductsOrdered:
+SELECT * FROM products ORDER BY product_id;
+
+

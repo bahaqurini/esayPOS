@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import org.aasoft.easypos.Controller.createDatabase
 import org.aasoft.easypos.data.FiledPlace
 import org.aasoft.easypos.data.ItemFiled
 import org.aasoft.easypos.data.SellItem
@@ -35,35 +36,19 @@ fun SellScreen(
     perSellItems: MutableList<SellItem> = mutableListOf(),
     onChangeItem: ( FiledPlace, String) -> Unit = { _, _ ->}
 ){
-    var selectedItemPlace by remember { mutableStateOf<FiledPlace?>(null) }
+    val database = remember { createDatabase() }
+    var selectedItemPlace by remember { mutableStateOf<FiledPlace?>(null ) }
     var value by remember { mutableStateOf("") }
     val sellItems = remember { mutableStateListOf<SellItem>() }
-    sellItems.addAll(perSellItems)
-
-
-//    {item, value ->
-//        println("itemId: ${item.itemId}, filed: ${item.filed}, value: $value")
-//        val index = item.itemId
-//        when(item.filed) {
-//            ItemFiled.NAME -> items[index] = items[index].copy(name = value)
-//            ItemFiled.PRICE -> {
-//                val value = value.toDoubleOrNull() ?: 0.0
-//                items[index] = items[index].copy(price = value)
-//                items[index] = items[index].copy(total = items[index].quantity * value)
-//            }
-//            ItemFiled.QUANTITY -> {
-//                val value = value.toIntOrNull() ?: 0
-//                items[index] = items[index].copy(quantity = value)
-//                items[index] = items[index].copy(total = value * items[index].price)
-//            }
-//            ItemFiled.TOTAL -> {
-//                val value = value.toDoubleOrNull() ?: 0.0
-//                items[index] = items[index].copy(total = value)
-//                items[index] = items[index].copy(price = value / items[index].quantity)
-//            }
-//            else -> {}
-//        }
-//    })
+    if ( sellItems.isEmpty())  sellItems.addAll(perSellItems)
+    val c = database.productsQueries.countProducts()
+    if (c.executeAsOne() == 0L)
+        database.productsQueries.insert("123330",13.5,20.0,"بيض")
+    val item = database.productsQueries.selectByBarcode("123330").executeAsList()
+    if (item.isNotEmpty())
+    {
+        //sellItems.add(SellItem(item[0]., item[0].name, item[0].price,
+    }
 
     Box(modifier = modifier.fillMaxSize())
     {

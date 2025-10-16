@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
+    id("app.cash.sqldelight") version "2.1.0"
 }
 
 kotlin {
@@ -32,6 +33,7 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation("app.cash.sqldelight:android-driver:2.1.0")
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -49,10 +51,22 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation("app.cash.sqldelight:sqlite-driver:2.1.0")
+        }
+        nativeMain.dependencies {
+//            implementation(compose.desktop.currentOs)
+//            implementation(libs.kotlinx.coroutinesNative)
+            implementation("app.cash.sqldelight:native-driver:2.1.0")
         }
     }
 }
-
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("org.aasoft.easypos")
+        }
+    }
+}
 android {
     namespace = "org.aasoft.easypos"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
