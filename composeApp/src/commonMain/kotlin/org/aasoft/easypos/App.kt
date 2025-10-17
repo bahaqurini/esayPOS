@@ -18,9 +18,12 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 import esaypos.composeapp.generated.resources.Res
 import esaypos.composeapp.generated.resources.compose_multiplatform
+import org.aasoft.easypos.controller.AddEditProductController
 import org.aasoft.easypos.controller.ProductsShowController
+import org.aasoft.easypos.controller.SellController
 import org.aasoft.easypos.data.ItemFiled
 import org.aasoft.easypos.data.SellItem
+import org.aasoft.easypos.ui.AddEditProduct
 import org.aasoft.easypos.ui.SellScreen
 import kotlin.collections.mutableListOf
 
@@ -34,6 +37,10 @@ fun App() {
 //        items.add(SellItem(2, "Item 2", 20.0, 3, 60.0))
 //        items.add(SellItem(3, "Item 3", 30.0, 4, 120.0))
 //        SellScreen(perSellItems = items)
-        ProductsShowController()
+
+//        ProductsShowController()
+        SellController()
+        //AddEditProductController()
+
     }
 }

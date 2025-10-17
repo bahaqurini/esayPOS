@@ -9,11 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import org.aasoft.easypos.controller.createDatabase
 import org.aasoft.easypos.data.FiledPlace
@@ -33,31 +37,14 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 @Composable
 fun SellScreen(
     modifier: Modifier = Modifier,
-    perSellItems: MutableList<SellItem> = mutableListOf(),
-    onChangeItem: (FiledPlace<ItemFiled>, String) -> Unit = { _, _ ->}
+    sellItems: MutableList<SellItem> = mutableListOf(),
+    onBarcodeScan: (String) -> Unit = {},
 ){
-    val database = remember { createDatabase() }
     var selectedItemPlace by remember { mutableStateOf<FiledPlace<ItemFiled>?>(null ) }
     var value by remember { mutableStateOf("") }
-    val sellItems = remember { mutableStateListOf<SellItem>() }
-    if ( sellItems.isEmpty())  sellItems.addAll(perSellItems)
-    val c = database.productsQueries.countProducts()
-    if (c.executeAsOne() < 2L)
-        database.productsQueries.insert("4534345",13.5,20.0,"حمص")
-    val item = database.productsQueries.selectByBarcode("123330").executeAsList()
-    if (item.isNotEmpty())
-    {
-        item.forEach {
-            sellItems.add(SellItem(
-                id = it.product_id.toInt(),
-                name = it.product_name.toString(),
-                price = it.retail_price,
-                quantity = it.product_id.toInt(),
-                total = it.retail_price,
-            ))
-        }
 
-    }
+
+
 
     Box(modifier = modifier.fillMaxSize())
     {
@@ -67,7 +54,16 @@ fun SellScreen(
             OutlinedTextField(
                 value = value,
                 onValueChange = {value = it },
-                label = { Text("Id") }
+                label = { Text("Id") },
+                maxLines = 1,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
+                keyboardActions = KeyboardActions(onGo  = {
+                    //toast("Go")
+                    onBarcodeScan(value)
+                    value = ""
+                    selectedItemPlace = null
+                }),
             )
 
 //            if (selectedItemPlace != null)
@@ -114,18 +110,18 @@ fun SellScreen(
                                     ItemFiled.PRICE -> {
                                         val value = value.toDoubleOrNull() ?: 0.0
                                         sellItems[index] = sellItems[index].copy(price = value)
-                                        sellItems[index] = sellItems[index].copy(total = sellItems[index].quantity * value)
+                                        //sellItems[index] = sellItems[index].copy(total = sellItems[index].quantity * value)
                                     }
 
                                     ItemFiled.QUANTITY -> {
                                         val value = value.toIntOrNull() ?: 0
                                         sellItems[index] = sellItems[index].copy(quantity = value)
-                                        sellItems[index] = sellItems[index].copy(total = value * sellItems[index].price)
+                                        //sellItems[index] = sellItems[index].copy(total = value * sellItems[index].price)
                                     }
 
                                     ItemFiled.TOTAL -> {
                                         val value = value.toDoubleOrNull() ?: 0.0
-                                        sellItems[index] = sellItems[index].copy(total = value)
+                                        //sellItems[index] = sellItems[index].copy(total = value)
                                         sellItems[index] = sellItems[index].copy(price = value / sellItems[index].quantity)
                                     }
 
@@ -135,7 +131,7 @@ fun SellScreen(
                     })
                 }
                 item {
-                    Text("Total: ${sellItems.sumOf { it.total }}")
+                    Text("Total: ${sellItems.sumOf { it.price*it.quantity }}")
                 }
             }
         }
@@ -144,6 +140,11 @@ fun SellScreen(
 @Composable
 fun ShowSellItem(modifier: Modifier = Modifier,item: SellItem,selectItemFiled: ItemFiled,onClickField: (Int, ItemFiled) -> Unit = { _, _ ->},onChangeValue: (String) -> Unit = {})
 {
+    var total by remember { mutableStateOf(item.price * item.quantity) }
+    LaunchedEffect(item.price, item.quantity) {
+        total = item.price * item.quantity
+    }
+
     Row(modifier = modifier.fillMaxWidth()) {
 //        if (selectItemFiled == ItemFiled.NAME)
 //            TextField(item.name, modifier = modifier.weight(1f), onValueChange = {onChangeValue(it)})
@@ -152,15 +153,25 @@ fun ShowSellItem(modifier: Modifier = Modifier,item: SellItem,selectItemFiled: I
         if (selectItemFiled == ItemFiled.PRICE)
             TextField(item.price.toString(), modifier = modifier.weight(1f), onValueChange = {onChangeValue(it)})
         else
-            ClickableText(item.price.toString(),modifier = modifier.weight(1f), onClick = {onClickField(item.id, ItemFiled.PRICE)})
+            ClickableText(item.price.toString(),modifier = modifier.weight(1f), onClick = {
+                total = item.price * item.quantity
+                onClickField(item.id, ItemFiled.PRICE)
+
+            })
         if (selectItemFiled == ItemFiled.QUANTITY)
-            TextField(item.quantity.toString(), modifier = modifier.weight(1f), onValueChange = {onChangeValue(it)})
+            TextField(item.quantity.toString(), modifier = modifier.weight(1f), onValueChange = {
+                onChangeValue(it)
+                total = item.price * item.quantity
+            })
         else
             ClickableText(item.quantity.toString(),modifier = modifier.weight(1f), onClick = {onClickField(item.id, ItemFiled.QUANTITY)})
         if (selectItemFiled == ItemFiled.TOTAL)
-            TextField(item.total.toString(), modifier = modifier.weight(1f), onValueChange = {onChangeValue(it)})
+            TextField(total.toString(), modifier = modifier.weight(1f), onValueChange = {
+                total = item.price * item.quantity
+                onChangeValue(it)
+            })
         else
-            ClickableText(item.total.toString(),modifier = modifier.weight(1f), onClick = {onClickField(item.id, ItemFiled.TOTAL)})
+            ClickableText(total.toString(),modifier = modifier.weight(1f), onClick = {onClickField(item.id, ItemFiled.TOTAL)})
     }
 }
 @Composable
@@ -173,14 +184,14 @@ fun ClickableText(text: String, modifier: Modifier = Modifier, onClick: () -> Un
     }
 }
 
-@Preview
+@Preview (showBackground = true)
 @Composable
 fun SellScreenPreview()
 {
     val items = mutableListOf(
-        SellItem(1, "Item 1", 10.0, 2, 20.0),
-        SellItem(2, "Item 2", 20.0, 3, 60.0),
-        SellItem(3, "Item 3", 30.0, 4, 120.0)
+        SellItem(1, "Item 1", 10.0, 2),
+        SellItem(2, "Item 2", 20.0, 3),
+        SellItem(3, "Item 3", 30.0, 4)
     )
-    SellScreen(perSellItems = items)
+    SellScreen(sellItems = items)
 }
