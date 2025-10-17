@@ -1,4 +1,4 @@
-package org.aasoft.easypos.Controller
+package org.aasoft.easypos.controller
 
 
 import androidx.compose.material3.Text

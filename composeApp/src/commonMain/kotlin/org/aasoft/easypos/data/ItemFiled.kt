@@ -8,4 +8,11 @@ enum class ItemFiled {
     TOTAL,
     NONE
 }
-
+enum class ProductsFiled {
+    ID,
+    NAME,
+    WHOLESALE_PRICE,
+    REGULAR_PRICE,
+    BARCODE,
+    NONE
+}

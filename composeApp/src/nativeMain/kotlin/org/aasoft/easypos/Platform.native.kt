@@ -5,6 +5,4 @@ import app.cash.sqldelight.driver.native.NativeSqliteDriver
 
 
 
-actual fun createDriver(): SqlDriver {
-    return NativeSqliteDriver(Database.Schema, "test.db")
-}
+actual fun createDriver(): SqlDriver = NativeSqliteDriver(Database.Schema, "test.db")

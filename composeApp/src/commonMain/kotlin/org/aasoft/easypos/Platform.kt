@@ -6,6 +6,5 @@ interface Platform {
     val name: String
 }
 
-expect fun getPlatform(): Platform
 
 expect fun createDriver(): SqlDriver

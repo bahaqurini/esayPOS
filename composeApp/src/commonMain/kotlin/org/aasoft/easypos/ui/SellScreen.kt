@@ -22,7 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import org.aasoft.easypos.Controller.createDatabase
+import org.aasoft.easypos.controller.createDatabase
 import org.aasoft.easypos.data.FiledPlace
 import org.aasoft.easypos.data.ItemFiled
 import org.aasoft.easypos.data.SellItem
@@ -34,10 +34,10 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun SellScreen(
     modifier: Modifier = Modifier,
     perSellItems: MutableList<SellItem> = mutableListOf(),
-    onChangeItem: ( FiledPlace, String) -> Unit = { _, _ ->}
+    onChangeItem: (FiledPlace<ItemFiled>, String) -> Unit = { _, _ ->}
 ){
     val database = remember { createDatabase() }
-    var selectedItemPlace by remember { mutableStateOf<FiledPlace?>(null ) }
+    var selectedItemPlace by remember { mutableStateOf<FiledPlace<ItemFiled>?>(null ) }
     var value by remember { mutableStateOf("") }
     val sellItems = remember { mutableStateListOf<SellItem>() }
     if ( sellItems.isEmpty())  sellItems.addAll(perSellItems)

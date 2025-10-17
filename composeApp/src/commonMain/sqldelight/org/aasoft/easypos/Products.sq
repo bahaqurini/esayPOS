@@ -10,6 +10,9 @@ insert:
 INSERT INTO products (barcode, wholesale_price, retail_price, product_name)
 VALUES (?, ?, ?, ?);
 
+selectAll:
+SELECT * FROM products WHERE 1;
+
 selectById:
 SELECT * FROM products WHERE product_id = ?;
 
