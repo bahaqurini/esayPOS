@@ -24,6 +24,7 @@ import org.aasoft.easypos.controller.SellController
 import org.aasoft.easypos.data.ItemFiled
 import org.aasoft.easypos.data.SellItem
 import org.aasoft.easypos.ui.AddEditProduct
+import org.aasoft.easypos.ui.MainScreen
 import org.aasoft.easypos.ui.SellScreen
 import kotlin.collections.mutableListOf
 
@@ -39,8 +40,9 @@ fun App() {
 //        SellScreen(perSellItems = items)
 
 //        ProductsShowController()
-        SellController()
+        //SellController()
         //AddEditProductController()
+        MainScreen()
 
     }
 }

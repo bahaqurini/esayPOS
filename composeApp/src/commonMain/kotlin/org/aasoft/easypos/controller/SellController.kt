@@ -1,21 +1,26 @@
 package org.aasoft.easypos.controller
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.aasoft.easypos.data.ItemsViewModel
 import org.aasoft.easypos.data.SellItem
 import org.aasoft.easypos.ui.SellScreen
 
 @Composable
-fun SellController(modifier: Modifier= Modifier)
+fun SellController(modifier: Modifier= Modifier, model: ItemsViewModel )
 {
     val db = createDatabase()
-    val sellItems = remember { mutableStateListOf<SellItem>() }
 
+    val items by model.items.collectAsState()
+    val sellItems = remember { mutableStateListOf<SellItem>() }
+    sellItems.addAll(items)
     SellScreen (sellItems = sellItems){
         var product = db.productsQueries.selectByBarcode(it).executeAsList()
         if (product.isEmpty() && it.toLongOrNull() != null)
@@ -31,6 +36,7 @@ fun SellController(modifier: Modifier= Modifier)
             else
             {
                 sellItems+= SellItem(product.first().product_id.toInt(),product.first().product_name!!,product.first().retail_price,1)
+                model.addItem( SellItem(product.first().product_id.toInt(),product.first().product_name!!,product.first().retail_price,1))
             }
 
         }
