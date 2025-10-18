@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -20,7 +21,7 @@ import org.aasoft.easypos.data.ProductsFiled
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>)
+fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>,onSell:()->Unit={})
 {
     var selectedItemPlace: FiledPlace<ProductsFiled>? = null
 
@@ -32,10 +33,9 @@ fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>)
 
                 ClickableText("Id", modifier = Modifier.weight(1f))
                 ClickableText("barcode",modifier = Modifier.weight(1f).border(1.dp, color = Color(0xFF000000), shape = RoundedCornerShape(0f)))
-                ClickableText("Name",modifier = Modifier.weight(1f).border(1.dp, color = Color(0xFF000000), shape = RoundedCornerShape(0f)))
                 ClickableText("Wholesale price",modifier = Modifier.weight(1f))
                 ClickableText("Retail price",modifier = Modifier.weight(1f))
-                ClickableText("barcode",modifier = Modifier.weight(1f))
+                ClickableText("name",modifier = Modifier.weight(1f))
             }
         }
 
@@ -75,6 +75,7 @@ fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>)
         item {
             Text("count: ${products.count()}")
         }
+
     }
 
 }
@@ -99,7 +100,7 @@ fun ShowProductItem(modifier: Modifier = Modifier,item: Products,selectProductsF
             ClickableText(item.barcode,modifier = modifier.weight(1f), onClick = {onClickField(item.product_id.toInt(), ProductsFiled.BARCODE)})
     }
 }
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ShowProductItemPreview()
 {

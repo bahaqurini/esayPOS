@@ -1,0 +1,60 @@
+CREATE TABLE customers (
+    customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_name TEXT NOT NULL,
+    id_number TEXT UNIQUE,
+    phone TEXT,
+    address TEXT,
+    notes TEXT
+);
+
+insertAndGetId:
+INSERT INTO customers (customer_name, id_number, phone, address, notes) VALUES (?, ?, ?, ?, ?);
+SELECT last_insert_rowid();
+
+insert:
+INSERT INTO customers (customer_name, id_number, phone, address, notes) VALUES (?, ?, ?, ?, ?);
+
+getLastInsertId:
+SELECT last_insert_rowid();
+
+selectById:
+SELECT * FROM customers WHERE customer_id = ?;
+
+selectByIdNumber:
+SELECT * FROM customers WHERE id_number = ?;
+
+selectByPhone:
+SELECT * FROM customers WHERE phone = ?;
+
+selectAll:
+SELECT * FROM customers ORDER BY customer_id;
+
+searchByName:
+SELECT * FROM customers WHERE customer_name LIKE ?;
+
+updateName:
+UPDATE customers SET customer_name = ? WHERE customer_id = ?;
+
+updateIdNumber:
+UPDATE customers SET id_number = ? WHERE customer_id = ?;
+
+updatePhone:
+UPDATE customers SET phone = ? WHERE customer_id = ?;
+
+updateAddress:
+UPDATE customers SET address = ? WHERE customer_id = ?;
+
+updateNotes:
+UPDATE customers SET notes = ? WHERE customer_id = ?;
+
+updateCustomer:
+UPDATE customers SET customer_name = ?, id_number = ?, phone = ?, address = ?, notes = ? WHERE customer_id = ?;
+
+deleteById:
+DELETE FROM customers WHERE customer_id = ?;
+
+countCustomers:
+SELECT COUNT(*) FROM customers;
+
+checkIdNumberExists:
+SELECT COUNT(*) FROM customers WHERE id_number = ? AND customer_id != ?;

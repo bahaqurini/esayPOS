@@ -1,0 +1,47 @@
+CREATE TABLE older (
+    order_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    customer_id INTEGER NOT NULL,
+    total_price REAL NOT NULL DEFAULT 0,
+    created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+insertAndGetId:
+INSERT INTO older (customer_id, total_price) VALUES (?, ?);
+SELECT last_insert_rowid();
+
+insert:
+INSERT INTO older (customer_id, total_price) VALUES (?, ?);
+
+getLastInsertId:
+SELECT last_insert_rowid();
+
+selectById:
+SELECT * FROM older WHERE order_id = ?;
+
+selectAll:
+SELECT * FROM older ORDER BY order_id;
+
+updateCustomerId:
+UPDATE older SET customer_id = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?;
+
+updateTotalPrice:
+UPDATE older SET total_price = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?;
+
+updateOrder:
+UPDATE older SET customer_id = ?, total_price = ?, updated_at = CURRENT_TIMESTAMP WHERE order_id = ?;
+
+deleteById:
+DELETE FROM older WHERE order_id = ?;
+
+getOrdersByCustomer:
+SELECT * FROM older WHERE customer_id = ? ORDER BY created_at DESC;
+
+countOrders:
+SELECT COUNT(*) FROM older;
+
+getTotalSales:
+SELECT SUM(total_price) FROM older;
+
+getCustomerTotalOrders:
+SELECT SUM(total_price) FROM older WHERE customer_id = ?;

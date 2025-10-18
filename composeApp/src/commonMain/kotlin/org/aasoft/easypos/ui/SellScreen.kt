@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -38,13 +39,11 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun SellScreen(
     modifier: Modifier = Modifier,
     sellItems: MutableList<SellItem> = mutableListOf(),
+    onSell: () -> Unit = {},
     onBarcodeScan: (String) -> Unit = {},
 ){
     var selectedItemPlace by remember { mutableStateOf<FiledPlace<ItemFiled>?>(null ) }
     var value by remember { mutableStateOf("") }
-
-
-
 
     Box(modifier = modifier.fillMaxSize())
     {
@@ -66,28 +65,7 @@ fun SellScreen(
                 }),
             )
 
-//            if (selectedItemPlace != null)
-//            {
-//                val value =  when(selectedItemPlace!!.filed)
-//                {
-//                    ItemFiled.NAME -> sellItems[selectedItemPlace!!.itemId].name
-//                    ItemFiled.PRICE -> sellItems[selectedItemPlace!!.itemId].price.toString()
-//                    ItemFiled.QUANTITY -> sellItems[selectedItemPlace!!.itemId].quantity.toString()
-//                    ItemFiled.TOTAL -> sellItems[selectedItemPlace!!.itemId].total.toString()
-//                    else -> ""
-//                }
-//                val label = when(selectedItemPlace!!.filed)
-//                {
-//                    ItemFiled.NAME -> "Name"
-//                    ItemFiled.PRICE -> "Price"
-//                    ItemFiled.QUANTITY -> "Quantity"
-//                    ItemFiled.TOTAL -> "Total"
-//                    else -> ""
-//                }
-//                OutlinedTextField(value = value, onValueChange = {onChangeItem( selectedItemPlace!!, it)}, label = { Text(label) })
-//
-//            }
-            LazyColumn {
+            LazyColumn(modifier = Modifier.weight(1f)) {
                 item {
                     Row {
                         //ClickableText("Id", modifier = Modifier.weight(1f))
@@ -99,13 +77,18 @@ fun SellScreen(
                 }
 
                 items(sellItems.count())
-                {
-                   index -> ShowSellItem(
-                    item = sellItems[index],
-                    selectItemFiled = if (selectedItemPlace?.itemId == index) selectedItemPlace?.filed ?: ItemFiled.NONE else ItemFiled.NONE,
-                    onClickField = {id, filed -> selectedItemPlace = FiledPlace(index, filed)},
-                    onChangeValue = {value ->
-                                when(selectedItemPlace!!.filed) {
+                { index ->
+                    Card(onClick = {})
+                    {
+                        ShowSellItem(
+                            item = sellItems[index],
+                            selectItemFiled = if (selectedItemPlace?.itemId == index) selectedItemPlace?.filed
+                                ?: ItemFiled.NONE else ItemFiled.NONE,
+                            onClickField = { id, filed ->
+                                selectedItemPlace = FiledPlace(index, filed)
+                            },
+                            onChangeValue = { value ->
+                                when (selectedItemPlace!!.filed) {
                                     //ItemFiled.NAME -> sellItems[index] = sellItems[index].copy(name = value)
                                     ItemFiled.PRICE -> {
                                         val value = value.toDoubleOrNull() ?: 0.0
@@ -122,17 +105,23 @@ fun SellScreen(
                                     ItemFiled.TOTAL -> {
                                         val value = value.toDoubleOrNull() ?: 0.0
                                         //sellItems[index] = sellItems[index].copy(total = value)
-                                        sellItems[index] = sellItems[index].copy(price = value / sellItems[index].quantity)
+                                        sellItems[index] =
+                                            sellItems[index].copy(price = value / sellItems[index].quantity)
                                     }
 
                                     else -> {}
                                 }
 
-                    })
+                            })
+                    }
                 }
                 item {
                     Text("Total: ${sellItems.sumOf { it.price*it.quantity }}")
                 }
+
+            }
+            Button(onClick = {onSell()}){
+                Text("Sell")
             }
         }
     }
