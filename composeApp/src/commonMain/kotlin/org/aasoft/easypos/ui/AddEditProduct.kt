@@ -49,6 +49,11 @@ fun AddEditProduct(modifier: Modifier=Modifier,product: Products?,onProductChang
                         null
                     )
                 )
+                id = "new id"
+                name = ""
+                barcode = ""
+                wholesalePrice = ""
+                retailPrice = ""
             }) {
                     Text(text = if (product == null) "add" else "save")
             }

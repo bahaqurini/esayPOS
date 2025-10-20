@@ -10,6 +10,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -21,9 +26,10 @@ import org.aasoft.easypos.data.ProductsFiled
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>,onSell:()->Unit={})
+fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>)
 {
-    var selectedItemPlace: FiledPlace<ProductsFiled>? = null
+    var selectedItemPlace by remember { mutableStateOf<FiledPlace<ProductsFiled>?>(null ) }
+
 
     LazyColumn {
         item {
@@ -43,8 +49,11 @@ fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>,onS
         {
             index -> ShowProductItem(
             item = products[index],
-            selectProductsFiled = if (selectedItemPlace?.itemId == index) selectedItemPlace?.filed ?: ProductsFiled.NONE else ProductsFiled.NONE,
-            onClickField = {id, filed -> selectedItemPlace = FiledPlace<ProductsFiled>(index, filed)},
+            selectProductsFiled = if
+                    (selectedItemPlace?.itemId == products[index].product_id.toInt()) selectedItemPlace?.filed ?: ProductsFiled.NONE else ProductsFiled.NONE,
+            onClickField = {id, filed -> selectedItemPlace = FiledPlace<ProductsFiled>(id, filed)
+
+            },
             onChangeValue = {value ->
                 when(selectedItemPlace!!.filed) {
                     //ItemFiled.NAME -> sellItems[index] = sellItems[index].copy(name = value)
@@ -83,9 +92,15 @@ fun ProductsShow(modifier: Modifier=Modifier, products:MutableList<Products>,onS
 @Composable
 fun ShowProductItem(modifier: Modifier = Modifier,item: Products,selectProductsFiled: ProductsFiled,onClickField: (Int, ProductsFiled) -> Unit = { _, _ ->},onChangeValue: (String) -> Unit = {})
 {
+    LaunchedEffect(selectProductsFiled)
+    {
+        println("selectProductsFiled: $selectProductsFiled")
+    }
+
     Row(modifier = modifier.fillMaxWidth()) {
         ClickableText(item.product_id.toString(), modifier = modifier.weight(1f))
-        ClickableText(item.product_name?:"", modifier = modifier.weight(1f), onClick = {onClickField(item.product_id.toInt(), ProductsFiled.NAME)})
+        ClickableText(item.product_name?:"", modifier = modifier.weight(1f))
+
         if (selectProductsFiled == ProductsFiled.WHOLESALE_PRICE)
             TextField(item.wholesale_price.toString(), modifier = modifier.weight(1f), onValueChange = {onChangeValue(it)})
         else

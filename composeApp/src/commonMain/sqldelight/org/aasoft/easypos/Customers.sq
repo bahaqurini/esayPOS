@@ -1,4 +1,4 @@
-CREATE TABLE customers (
+CREATE TABLE  IF NOT EXISTS customers (
     customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
     customer_name TEXT NOT NULL,
     id_number TEXT UNIQUE,

@@ -143,7 +143,6 @@ fun ShowSellItem(modifier: Modifier = Modifier,item: SellItem,selectItemFiled: I
             TextField(item.price.toString(), modifier = modifier.weight(1f), onValueChange = {onChangeValue(it)})
         else
             ClickableText(item.price.toString(),modifier = modifier.weight(1f), onClick = {
-                total = item.price * item.quantity
                 onClickField(item.id, ItemFiled.PRICE)
 
             })
