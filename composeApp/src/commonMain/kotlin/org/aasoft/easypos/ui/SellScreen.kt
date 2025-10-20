@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import org.aasoft.easypos.controller.NavSell
 import org.aasoft.easypos.controller.createDatabase
 import org.aasoft.easypos.data.FiledPlace
 import org.aasoft.easypos.data.ItemFiled
@@ -39,6 +40,8 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun SellScreen(
     modifier: Modifier = Modifier,
     sellItems: MutableList<SellItem> = mutableListOf(),
+    olderId: Long = 0L,
+    changeOlder: (NavSell) -> Unit = { _ ->},
     onSell: () -> Unit = {},
     onBarcodeScan: (String) -> Unit = {},
 ){
@@ -49,7 +52,28 @@ fun SellScreen(
     {
         Column()
         {
-            Text("Sell")
+            Row(){
+                Text("Sell")
+                Button(onClick = {changeOlder(NavSell.First)}, modifier = Modifier.weight(1f)) {
+                    Text("First Older")
+
+                }
+                Button(onClick = {changeOlder(NavSell.Previous)}, modifier = Modifier.weight(1f)) {
+                    Text("Previous")
+
+
+                }
+                Text(olderId.toString())
+                Button(onClick = { changeOlder(NavSell.Next)}, modifier = Modifier.weight(1f)) {
+                    Text("Next")
+
+                }
+                Button(onClick = {changeOlder(NavSell.Last)}, modifier = Modifier.weight(1f)) {
+                    Text("Last Older")
+
+                }
+
+            }
             OutlinedTextField(
                 value = value,
                 onValueChange = {value = it },
