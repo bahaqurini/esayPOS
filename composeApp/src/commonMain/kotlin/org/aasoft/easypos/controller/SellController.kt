@@ -63,9 +63,17 @@ object Sell
     fun sell(items: List<SellItem>)
     {
         db.olderQueries.insert(1L,items.sumOf { it.price*it.quantity })
-        val id = db.olderQueries.getLastInsertId().executeAsOne()
+        val id = db.olderQueries.getLastId().executeAsOne()
+        println("on sell sun id: $id")
         items.forEach {
             db.olderItemQueries.insert(id,it.id.toLong(),it.price,it.quantity.toLong())
+        }
+    }
+    fun editSell(olderId: Long,items: List<SellItem>) {
+
+        db.olderItemQueries.deleteByOrderId(olderId)
+        items.forEach {
+            db.olderItemQueries.insert(olderId,it.id.toLong(),it.price,it.quantity.toLong())
         }
     }
     fun found(barcode: String): List<Products>
@@ -101,7 +109,7 @@ fun SellController(modifier: Modifier= Modifier, model: ItemsViewModel )
 //            val older = db.olderItemQueries.selectById(id).executeAsOne()
             val items = db.olderItemQueries.selectByOrderId(id).executeAsList()
             println("items size: ${items.size}")
-            println("items: ${items}")
+            println("items: $items")
             items.forEach {
                 val product = db.productsQueries.selectById(it.product_id).executeAsOne()
                 sellItems.add(SellItem(product.product_id.toInt(),product.product_name!!,product.retail_price,it.quantity.toInt()))
@@ -112,6 +120,7 @@ fun SellController(modifier: Modifier= Modifier, model: ItemsViewModel )
     }
 
     SellScreen (
+        modifier = modifier,
         sellItems = sellItems,
         olderId = id,
         changeOlder = {
@@ -121,7 +130,10 @@ fun SellController(modifier: Modifier= Modifier, model: ItemsViewModel )
         onSell = {
             if (sellItems.isNotEmpty())
             {
-                Sell.sell(sellItems)
+                if(id == 0L)
+                    Sell.sell(sellItems)
+                else
+                    Sell.editSell(id,sellItems)
             }
             sellItems.clear()
             model.clearItems()

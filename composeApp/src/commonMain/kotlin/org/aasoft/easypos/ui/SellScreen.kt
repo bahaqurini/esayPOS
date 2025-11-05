@@ -145,7 +145,7 @@ fun SellScreen(
 
             }
             Button(onClick = {onSell()}){
-                Text("Sell")
+                Text(if(olderId == 0L) "Sell" else "Edit")
             }
         }
     }
