@@ -4,11 +4,14 @@ CREATE TABLE IF NOT EXISTS products (
     wholesale_price REAL NOT NULL,
     retail_price REAL NOT NULL,
     product_name TEXT,
+    quantity INTEGER DEFAULT 0,
+    sn INTEGER DEFAULT 0,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
+
 insert:
-INSERT INTO products (barcode, wholesale_price, retail_price, product_name)
-VALUES (?, ?, ?, ?);
+INSERT INTO products (barcode, wholesale_price, retail_price, product_name, quantity, sn)
+VALUES (?, ?, ?, ?, ?, ?);
 
 selectAll:
 SELECT * FROM products WHERE 1;
@@ -37,8 +40,14 @@ UPDATE products SET product_name = ? WHERE product_id = ?;
 updateBarcode:
 UPDATE products SET barcode = ? WHERE product_id = ?;
 
+updateQuantity:
+UPDATE products SET quantity = ? WHERE product_id = ?;
+
+updateSn:
+UPDATE products SET sn = ? WHERE product_id = ?;
+
 updateProduct:
-UPDATE products SET barcode = ?, wholesale_price = ?, retail_price = ?, product_name = ? WHERE product_id = ?;
+UPDATE products SET barcode = ?, wholesale_price = ?, retail_price = ?, product_name = ?, quantity = ?, sn = ? WHERE product_id = ?;
 
 countProducts:
 SELECT COUNT(*) FROM products;
@@ -49,4 +58,11 @@ SELECT * FROM products WHERE product_name LIKE ?;
 getProductsOrdered:
 SELECT * FROM products ORDER BY product_id;
 
+getProductsBySn:
+SELECT * FROM products WHERE sn = ?;
 
+getLowStockProducts:
+SELECT * FROM products WHERE quantity < ?;
+
+updateStock:
+UPDATE products SET quantity = quantity + ? WHERE product_id = ?;

@@ -46,6 +46,8 @@ fun AddEditProduct(modifier: Modifier=Modifier,product: Products?,onProductChang
                         wholesalePrice.toDouble(),
                         retailPrice.toDouble(),
                         name,
+                        0,
+                        0,
                         null
                     )
                 )

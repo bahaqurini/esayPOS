@@ -14,11 +14,11 @@ fun AddEditProductController(modifier: Modifier = Modifier,product: Products? = 
     {
         if (it.product_id==0L)
         {
-            db.productsQueries.insert(it.barcode,it.wholesale_price,it.retail_price,it.product_name)
+            db.productsQueries.insert(it.barcode,it.wholesale_price,it.retail_price,it.product_name,0,0)
         }
         else
         {
-            db.productsQueries.updateProduct(it.barcode,it.wholesale_price,it.retail_price,it.product_name,it.product_id)
+            db.productsQueries.updateProduct(it.barcode,it.wholesale_price,it.retail_price,it.product_name,0,0,it.product_id)
         }
 
     }

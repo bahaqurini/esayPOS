@@ -93,7 +93,7 @@ fun SellScreen(
                 item {
                     Row {
                         //ClickableText("Id", modifier = Modifier.weight(1f))
-                        ClickableText("Name",modifier = Modifier.weight(1f).border(1.dp, color = Color(0xFF000000), shape = RoundedCornerShape(0f)))
+                        ClickableText("Name",modifier = Modifier.weight(1f))
                         ClickableText("Price",modifier = Modifier.weight(1f))
                         ClickableText("Quantity",modifier = Modifier.weight(1f))
                         ClickableText("Total",modifier = Modifier.weight(1f))

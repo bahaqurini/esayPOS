@@ -132,10 +132,10 @@ fun ShowProductItemPreview()
 {
     MaterialTheme {
         val products = mutableListOf(
-            Products(1, "Product 1", 10.0, 20.0, "1234567890",""),
-            Products(2, "Product 2", 15.0, 25.0, "0987654321",""),
-            Products(3, "Product 3", 20.0, 30.0, "1111111111",""),
-            Products(4, "Product 4", 25.0, 35.0, "2222222222",""),
+            Products(1, "Product 1", 10.0, 20.0, "1234567890",0,0,""),
+            Products(2, "Product 2", 15.0, 25.0, "0987654321",0,0,""),
+            Products(3, "Product 3", 20.0, 30.0, "1111111111",0,0,""),
+            Products(4, "Product 4", 25.0, 35.0, "2222222222",0,0,""),
             )
         //val database = createDatabase()
         //val products = database.productsQueries.selectAll().executeAsList()
