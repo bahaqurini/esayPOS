@@ -1,6 +1,5 @@
 package org.aasoft.easypos.ui
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,21 +18,17 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import org.aasoft.easypos.controller.NavSell
-import org.aasoft.easypos.controller.createDatabase
 import org.aasoft.easypos.data.FiledPlace
 import org.aasoft.easypos.data.ItemFiled
 import org.aasoft.easypos.data.SellItem
 import org.jetbrains.compose.ui.tooling.preview.Preview
-
 
 
 @Composable
